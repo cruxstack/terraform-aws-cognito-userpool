@@ -145,6 +145,11 @@ variable "recovery_mechanisms" {
   type        = list(string)
   description = "List of account reecovery options."
   default     = []
+
+  validation {
+    condition     = length(var.recovery_mechanisms) == 0 || alltrue([for x in var.recovery_mechanisms : contains(["verified_email", "verified_phone_number", "admin_only"], lower(x))])
+    error_message = "The `recovery_mechanisms` must be one of `verified_email`, `verified_phone_number`, or `admin_only`."
+  }
 }
 
 variable "sms_config" {
