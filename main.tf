@@ -191,7 +191,7 @@ data "aws_iam_policy_document" "sms" {
 resource "aws_iam_role" "sms" {
   count = local.enabled ? 1 : 0
 
-  name        = module.component.id
+  name        = module.cognito_userpool_sms_label.id
   description = ""
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
