@@ -154,6 +154,7 @@ variable "recovery_mechanisms" {
 
 variable "sms_config" {
   type = object({
+    enabled        = optional(bool, false)
     external_id    = optional(string, "")
     sns_caller_arn = optional(string, "")
   })

@@ -138,10 +138,10 @@ resource "aws_cognito_user_pool" "this" {
   }
 
   dynamic "sms_configuration" {
-    for_each = coalesce(var.sms_config.sns_caller_arn, "__UNSET__") != "__UNSET__" ? [true] : []
+    for_each = var.sms_config.enabled ? [true] : []
     content {
       external_id    = var.sms_config.external_id
-      sns_caller_arn = var.sms_config.sns_caller_arn
+      sns_caller_arn = coalesce(var.sms_config.sns_caller_arn, aws_iam_role.sms.arn)
     }
   }
 
@@ -160,4 +160,53 @@ resource "aws_cognito_user_pool" "this" {
   }
 
   tags = module.cognito_userpool_label.tags
+}
+
+# ---------------------------------------------------------------------- iam ---
+
+module "cognito_userpool_sms_label" {
+  source  = "cloudposse/label/null"
+  version = "0.25.0"
+
+  attattributes = "sms"
+  context       = module.cognito_userpool_label.context
+}
+
+resource "random_uuid" "sms_role_external_id" {}
+
+data "aws_iam_policy_document" "sms" {
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "sns:publish",
+    ]
+
+    resources = [
+      "*",
+    ]
+  }
+}
+
+resource "aws_iam_role" "sms" {
+  count = local.enabled ? 1 : 0
+
+  name        = module.component.id
+  description = ""
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [{
+      Effect    = "Allow"
+      Principal = { "Service" : "cognito-idp.amazonaws.com" }
+      Action    = ["sts:AssumeRole", "sts:TagSession"]
+      condition = { "StringEquals" = { "sts:ExternalId" = random_uuid.sms_role_external_id.result } }
+    }]
+  })
+
+  inline_policy {
+    name   = "access"
+    policy = data.aws_iam_policy_document.sms.json
+  }
+
+  tags = module.cognito_userpool_sms_label.tags
 }
