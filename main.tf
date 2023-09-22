@@ -168,7 +168,7 @@ module "cognito_userpool_sms_label" {
   source  = "cloudposse/label/null"
   version = "0.25.0"
 
-  attributes = "sms"
+  attributes = ["sms"]
   context    = module.cognito_userpool_label.context
 }
 
