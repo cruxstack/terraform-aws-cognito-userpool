@@ -168,8 +168,8 @@ module "cognito_userpool_sms_label" {
   source  = "cloudposse/label/null"
   version = "0.25.0"
 
-  attattributes = "sms"
-  context       = module.cognito_userpool_label.context
+  attributes = "sms"
+  context    = module.cognito_userpool_label.context
 }
 
 resource "random_uuid" "sms_role_external_id" {}
