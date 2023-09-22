@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/vscode/devcontainers/base:jammy
+FROM mcr.microsoft.com/devcontainers/base:jammy
 
 # install aws
 RUN SYSTEM_ARCH=$(uname -m) \
@@ -21,5 +21,4 @@ RUN SYSTEM_ARCH=$(dpkg --print-architecture) \
 
 # verify installs
 RUN terraform --version \
-    && aws --version \
-    && docker --version
+    && aws --version
