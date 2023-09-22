@@ -1,6 +1,9 @@
 locals {
   enabled = coalesce(var.enabled, module.this.enabled, true)
   name    = coalesce(var.name, module.this.name, "idp-${random_string.cognito_userpool_random_suffix.result}")
+
+  sms_role_arn         = coalesce(var.sms_config.sns_caller_arn, aws_iam_role.sms.arn)
+  sms_role_external_id = coalesce(var.sms_config.external_id, random_uuid.sms_role_external_id.result)
 }
 
 # -------------------------------------------------------------------- label ---
@@ -140,8 +143,8 @@ resource "aws_cognito_user_pool" "this" {
   dynamic "sms_configuration" {
     for_each = var.sms_config.enabled ? [true] : []
     content {
-      external_id    = var.sms_config.external_id
-      sns_caller_arn = coalesce(var.sms_config.sns_caller_arn, aws_iam_role.sms.arn)
+      external_id    = local.sms_role_external_id
+      sns_caller_arn = local.sms_role_arn
     }
   }
 
@@ -199,7 +202,7 @@ resource "aws_iam_role" "sms" {
       Effect    = "Allow"
       Principal = { "Service" : "cognito-idp.amazonaws.com" }
       Action    = ["sts:AssumeRole", "sts:TagSession"]
-      condition = { "StringEquals" = { "sts:ExternalId" = random_uuid.sms_role_external_id.result } }
+      Condition = { "StringEquals" = { "sts:ExternalId" = local.sms_role_external_id } }
     }]
   })
 
