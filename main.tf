@@ -118,8 +118,8 @@ resource "aws_cognito_user_pool" "this" {
       dynamic "recovery_mechanism" {
         for_each = var.recovery_mechanisms
         content {
-          name     = lookup(recovery_mechanism.value, "name")
-          priority = lookup(recovery_mechanism.value, "priority")
+          name     = recovery_mechanism.value
+          priority = index(var.recovery_mechanisms, recovery_mechanism.value) + 1
         }
       }
     }
