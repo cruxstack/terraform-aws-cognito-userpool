@@ -7,8 +7,8 @@ variable "email_config" {
     from_email_address     = optional(string)
     reply_to_email_address = optional(string, "")
     source_arn             = optional(string, "")
-    verification_message   = optional(string, "")
-    verification_subject   = optional(string, "")
+    verification_message   = optional(string, "Your verification code is `{####}`")
+    verification_subject   = optional(string, "Your verification code")
   })
   description = "Configuration email from the userpool."
   default     = {}
