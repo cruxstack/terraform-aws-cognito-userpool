@@ -32,11 +32,11 @@ resource "aws_cognito_user_pool" "this" {
   name                       = module.cognito_userpool_label.id
   alias_attributes           = var.alias_attributes
   auto_verified_attributes   = var.auto_verified_attributes
-  email_verification_subject = coalesce(var.email_verification_subject, var.admin_create_user_config.email_subject)
-  email_verification_message = coalesce(var.email_verification_message, var.admin_create_user_config.email_message)
+  email_verification_subject = coalesce(var.email_verification_subject, var.email_config.verification_subject, var.admin_create_user_config.email_subject)
+  email_verification_message = coalesce(var.email_verification_message, var.email_config.verification_message, var.admin_create_user_config.email_message)
   mfa_configuration          = upper(var.mfa_config)
-  sms_authentication_message = var.sms_authentication_message
-  sms_verification_message   = var.sms_verification_message
+  sms_authentication_message = coalesce(var.sms_authentication_message, var.sms_config.authentication_message)
+  sms_verification_message   = coalesce(var.sms_verification_message, var.sms_config.verification_message)
   username_attributes        = var.username_attributes
   deletion_protection        = var.deletion_protection ? "ACTIVE" : "INACTIVE"
 
