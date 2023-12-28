@@ -14,18 +14,6 @@ variable "email_config" {
   default     = {}
 }
 
-variable "email_verification_message" {
-  type        = string
-  description = "A string representing the email verification message"
-  default     = ""
-}
-
-variable "email_verification_subject" {
-  type        = string
-  description = "A string representing the email verification subject"
-  default     = ""
-}
-
 variable "admin_create_user_config" {
   type = object({
     allow_admin_create_user_only = optional(bool, true)
@@ -154,24 +142,14 @@ variable "recovery_mechanisms" {
 
 variable "sms_config" {
   type = object({
-    enabled        = optional(bool, false)
-    external_id    = optional(string, "")
-    sns_caller_arn = optional(string, "")
+    enabled                = optional(bool, false)
+    external_id            = optional(string, "")
+    sns_caller_arn         = optional(string, "")
+    authentication_message = optional(string, "Your code is {####}")
+    verification_message   = optional(string, "Your code is {####}")
   })
   description = "Configuration for SMS"
   default     = {}
-}
-
-variable "sms_authentication_message" {
-  type        = string
-  description = "A string representing the SMS authentication message."
-  default     = "Your code is {####}"
-}
-
-variable "sms_verification_message" {
-  type        = string
-  description = "A string representing the SMS verification message."
-  default     = "Your code is {####}"
 }
 
 variable "software_token_mfa_config" {
@@ -241,4 +219,30 @@ variable "verification_message_template" {
   })
   description = "Configuration for verification message templates."
   default     = {}
+}
+
+# =================================================================== deprecated ===
+
+variable "email_verification_message" {
+  type        = string
+  description = "A string representing the email verification message"
+  default     = ""
+}
+
+variable "email_verification_subject" {
+  type        = string
+  description = "A string representing the email verification subject"
+  default     = ""
+}
+
+variable "sms_authentication_message" {
+  type        = string
+  description = "A string representing the SMS authentication message."
+  default     = "Your code is {####}"
+}
+
+variable "sms_verification_message" {
+  type        = string
+  description = "A string representing the SMS verification message."
+  default     = "Your code is {####}"
 }
