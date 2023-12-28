@@ -17,8 +17,8 @@ variable "email_config" {
 variable "admin_create_user_config" {
   type = object({
     allow_admin_create_user_only = optional(bool, true)
-    email_message                = optional(string, "{username}, your verification code is `{####}`")
-    email_subject                = optional(string, "Your verification code")
+    email_message                = optional(string, "{username}, your temporary password is `{####}`")
+    email_subject                = optional(string, "Your Invitation Information")
     sms_message                  = optional(string, "Your username is {username} and temporary password is `{####}`")
   })
   description = "The configuration for AdminCreateUser requests"
