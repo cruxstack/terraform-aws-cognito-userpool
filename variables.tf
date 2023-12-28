@@ -238,11 +238,11 @@ variable "email_verification_subject" {
 variable "sms_authentication_message" {
   type        = string
   description = "A string representing the SMS authentication message."
-  default     = "Your code is {####}"
+  default     = ""
 }
 
 variable "sms_verification_message" {
   type        = string
   description = "A string representing the SMS verification message."
-  default     = "Your code is {####}"
+  default     = ""
 }
