@@ -8,6 +8,8 @@ locals {
 module "congito_userpool" {
   source = "../../"
 
+  domain = { enabled = true }
+
   context = module.example_label.context # not required
 }
 

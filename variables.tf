@@ -1,5 +1,15 @@
 # ================================================================= userpool ===
 
+variable "domain" {
+  type = object({
+    enabled         = optional(bool, false)
+    name            = optional(string)
+    certificate_arn = optional(string)
+  })
+  description = "Configuration domain to assign userpool."
+  default     = {}
+}
+
 variable "email_config" {
   type = object({
     configuration_set      = optional(string)

@@ -165,6 +165,16 @@ resource "aws_cognito_user_pool" "this" {
   tags = module.cognito_userpool_label.tags
 }
 
+# ------------------------------------------------------------------- domain ---
+
+resource "aws_cognito_user_pool_domain" "domain" {
+  count = local.enabled && var.domain.enabled ? 1 : 0
+
+  domain          = coalesce(var.domain.name, module.cognito_userpool_label.id)
+  certificate_arn = var.domain.certificate_arn
+  user_pool_id    = aws_cognito_user_pool.this[0].id
+}
+
 # ---------------------------------------------------------------------- iam ---
 
 module "cognito_userpool_sms_label" {
