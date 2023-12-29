@@ -215,7 +215,7 @@ variable "verification_message_template" {
   type = object({
     default_email_option  = optional(string, "CONFIRM_WITH_CODE")
     email_message_by_link = optional(string, "{##Click Here##}")
-    email_subject_by_link = optional(string, "Your verification code")
+    email_subject_by_link = optional(string, "Your Verification Link")
   })
   description = "Configuration for verification message templates."
   default     = {}
