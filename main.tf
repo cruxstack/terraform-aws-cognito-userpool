@@ -188,16 +188,12 @@ module "cognito_userpool_sms_label" {
 resource "random_uuid" "sms_role_external_id" {}
 
 data "aws_iam_policy_document" "sms" {
+  count = local.enabled ? 1 : 0
+
   statement {
-    effect = "Allow"
-
-    actions = [
-      "sns:publish",
-    ]
-
-    resources = [
-      "*",
-    ]
+    effect    = "Allow"
+    actions   = ["sns:publish"]
+    resources = ["*"]
   }
 }
 
@@ -216,10 +212,12 @@ resource "aws_iam_role" "sms" {
     }]
   })
 
-  inline_policy {
-    name   = "access"
-    policy = data.aws_iam_policy_document.sms.json
-  }
-
   tags = module.cognito_userpool_sms_label.tags
+}
+
+resource "aws_iam_role_policy" "sms" {
+  count = local.enabled ? 1 : 0
+
+  role   = resource.aws_iam_role.sms[0].name
+  policy = data.aws_iam_policy_document.sms[0].json
 }
