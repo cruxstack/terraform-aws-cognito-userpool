@@ -2,8 +2,8 @@ locals {
   enabled = coalesce(var.enabled, module.this.enabled, true)
   name    = coalesce(var.name, module.this.name, "idp-${random_string.cognito_userpool_random_suffix.result}")
 
-  sms_role_arn         = coalesce(var.sms_config.sns_caller_arn, aws_iam_role.sms[0].arn)
-  sms_role_external_id = coalesce(var.sms_config.external_id, random_uuid.sms_role_external_id.result)
+  sms_role_arn         = local.enabled ? coalesce(try(var.sms_config.sns_caller_arn, ""), aws_iam_role.sms[0].arn) : null
+  sms_role_external_id = local.enabled ? coalesce(try(var.sms_config.external_id, ""), random_uuid.sms_role_external_id.result) : null
 }
 
 # -------------------------------------------------------------------- label ---
