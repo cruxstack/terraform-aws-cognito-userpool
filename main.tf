@@ -175,6 +175,24 @@ resource "aws_cognito_user_pool_domain" "domain" {
   user_pool_id    = aws_cognito_user_pool.this[0].id
 }
 
+# -------------------------------------------------------- resource_server ---
+
+resource "aws_cognito_resource_server" "this" {
+  for_each = local.enabled ? var.resource_servers : {}
+
+  identifier   = each.value.identifier
+  name         = each.value.name
+  user_pool_id = aws_cognito_user_pool.this[0].id
+
+  dynamic "scope" {
+    for_each = { for k, v in each.value.scopes : k => v if v.enabled }
+    content {
+      scope_name        = scope.key
+      scope_description = scope.value.description
+    }
+  }
+}
+
 # ---------------------------------------------------------------------- iam ---
 
 module "cognito_userpool_sms_label" {

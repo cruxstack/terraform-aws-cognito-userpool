@@ -231,6 +231,19 @@ variable "verification_message_template" {
   default     = {}
 }
 
+variable "resource_servers" {
+  type = map(object({
+    identifier = string
+    name       = string
+    scopes = optional(map(object({
+      enabled     = optional(bool, true)
+      description = string
+    })), {})
+  }))
+  description = "Map of resource server configurations. Each resource server defines custom OAuth scopes for an API."
+  default     = {}
+}
+
 # =================================================================== deprecated ===
 
 variable "email_verification_message" {
