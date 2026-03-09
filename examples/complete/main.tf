@@ -10,6 +10,17 @@ module "congito_userpool" {
 
   domain = { enabled = true }
 
+  resource_servers = {
+    api = {
+      identifier = "api"
+      name       = "Example API"
+      scopes = {
+        read  = { description = "Read access" }
+        write = { description = "Write access" }
+      }
+    }
+  }
+
   context = module.example_label.context # not required
 }
 
