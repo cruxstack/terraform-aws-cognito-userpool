@@ -22,7 +22,7 @@ for more details on these variables.
 
 | Name                             | Description                                                                                                                                                             |     Type     |         Default         | Required |
 |----------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:------------:|:-----------------------:|:--------:|
-| `domain`                         | Configuration domain to assign userpool.                                                                                                                                |    object    |          `{}`           |    No    |
+| `domain`                         | Configuration domain to assign userpool. Set `managed_login_version` to `2` for managed login (requires `user_pool_tier` of `ESSENTIALS` or `PLUS`).                    |    object    |           `{}`          |    No    |
 | `email_config`                   | Configuration email from the userpool.                                                                                                                                  |    object    |          `{}`           |    No    |
 | `email_verification_message`     | A string representing the email verification message                                                                                                                    |    string    |          `""`           |    No    |
 | `email_verification_subject`     | A string representing the email verification subject                                                                                                                    |    string    |          `""`           |    No    |
@@ -44,6 +44,7 @@ for more details on these variables.
 | `user_attribute_update_settings` | Configuration block for user attribute update settings.                                                                                                                 |    object    |          `{}`           |    No    |
 | `username_config`                | Configuration for sername. Setting `case_sensitive` specifies whether username case sensitivity will be applied for all users in the userpool through Cognito APIs.     |    object    |          `{}`           |    No    |
 | `userpool_add_ons`               | Configuration block for userpool add-ons to enable userpool advanced security mode features                                                                             |    object    |          `{}`           |    No    |
+| `user_pool_tier`                 | Feature plan of the userpool. Must be one of `LITE`, `ESSENTIALS`, or `PLUS`. When `null`, AWS picks the tier.                                                          |    string    |          `null`         |    No    |
 | `verification_message_template`  | Configuration for verification message templates.                                                                                                                       |    object    |          `{}`           |    No    |
 
 ## Outputs

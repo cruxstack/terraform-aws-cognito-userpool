@@ -2,11 +2,15 @@
 
 variable "domain" {
   type = object({
-    enabled         = optional(bool, false)
-    name            = optional(string)
-    certificate_arn = optional(string)
+    enabled               = optional(bool, false)
+    name                  = optional(string)
+    certificate_arn       = optional(string)
+    managed_login_version = optional(number)
   })
-  description = "Configuration domain to assign userpool."
+  description = <<-EOF
+    Configuration domain to assign userpool. Set `managed_login_version` to `2` for managed login or `1` for the classic
+    hosted UI. Managed login requires the `ESSENTIALS` or `PLUS` userpool tier.
+  EOF
   default     = {}
 }
 
@@ -219,6 +223,17 @@ variable "userpool_add_ons" {
   })
   description = "Configuration block for userpool add-ons to enable userpool advanced security mode features"
   default     = {}
+}
+
+variable "user_pool_tier" {
+  type        = string
+  description = "Feature plan of the userpool. Must be one of `LITE`, `ESSENTIALS`, or `PLUS`. When `null`, AWS picks the tier."
+  default     = null
+
+  validation {
+    condition     = var.user_pool_tier == null ? true : contains(["LITE", "ESSENTIALS", "PLUS"], upper(var.user_pool_tier))
+    error_message = "user_pool_tier must be one of LITE, ESSENTIALS, or PLUS."
+  }
 }
 
 variable "verification_message_template" {
