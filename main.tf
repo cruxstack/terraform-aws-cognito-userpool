@@ -39,6 +39,7 @@ resource "aws_cognito_user_pool" "this" {
   sms_verification_message   = coalesce(var.sms_verification_message, var.sms_config.verification_message)
   username_attributes        = var.username_attributes
   deletion_protection        = var.deletion_protection ? "ACTIVE" : "INACTIVE"
+  user_pool_tier             = var.user_pool_tier == null ? null : upper(var.user_pool_tier)
 
   admin_create_user_config {
     allow_admin_create_user_only = var.admin_create_user_config.allow_admin_create_user_only
@@ -170,9 +171,10 @@ resource "aws_cognito_user_pool" "this" {
 resource "aws_cognito_user_pool_domain" "domain" {
   count = local.enabled && var.domain.enabled ? 1 : 0
 
-  domain          = coalesce(var.domain.name, module.cognito_userpool_label.id)
-  certificate_arn = var.domain.certificate_arn
-  user_pool_id    = aws_cognito_user_pool.this[0].id
+  domain                = coalesce(var.domain.name, module.cognito_userpool_label.id)
+  certificate_arn       = var.domain.certificate_arn
+  managed_login_version = var.domain.managed_login_version
+  user_pool_id          = aws_cognito_user_pool.this[0].id
 }
 
 # -------------------------------------------------------- resource_server ---
