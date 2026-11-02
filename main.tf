@@ -141,6 +141,13 @@ resource "aws_cognito_user_pool" "this" {
     }
   }
 
+  dynamic "sign_in_policy" {
+    for_each = length(var.sign_in_policy.allowed_first_auth_factors) > 0 ? [true] : []
+    content {
+      allowed_first_auth_factors = [for f in var.sign_in_policy.allowed_first_auth_factors : upper(f)]
+    }
+  }
+
   dynamic "sms_configuration" {
     for_each = var.sms_config.enabled ? [true] : []
     content {

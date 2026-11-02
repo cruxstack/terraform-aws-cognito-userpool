@@ -236,6 +236,19 @@ variable "user_pool_tier" {
   }
 }
 
+variable "sign_in_policy" {
+  type = object({
+    allowed_first_auth_factors = optional(list(string), [])
+  })
+  description = "Sign-in policy of the userpool. `allowed_first_auth_factors` accepts `PASSWORD`, `EMAIL_OTP`, `SMS_OTP`, and `WEB_AUTHN`; factors other than `PASSWORD` require a `user_pool_tier` of `ESSENTIALS` or `PLUS`. When empty, AWS keeps its default."
+  default     = {}
+
+  validation {
+    condition     = alltrue([for f in var.sign_in_policy.allowed_first_auth_factors : contains(["PASSWORD", "EMAIL_OTP", "SMS_OTP", "WEB_AUTHN"], upper(f))])
+    error_message = "sign_in_policy.allowed_first_auth_factors must only contain PASSWORD, EMAIL_OTP, SMS_OTP, or WEB_AUTHN."
+  }
+}
+
 variable "verification_message_template" {
   type = object({
     default_email_option  = optional(string, "CONFIRM_WITH_CODE")
